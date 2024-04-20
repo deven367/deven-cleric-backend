@@ -4,6 +4,21 @@ from ask_gpt4 import send_message
 from responses import GetQuestionAndFactsResponse, SubmitQuestionAndDocumentsResponse
 
 app = FastAPI()
+from fastapi.middleware.cors import CORSMiddleware
+
+origins = [
+    "http://localhost",
+    "http://localhost:8080",
+    "https://huggingface.co/spaces/deven367/frontend"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # @router.post("/submit_question_and_documents/")
