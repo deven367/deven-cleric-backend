@@ -62,9 +62,10 @@ def response(
     }
     return GetQuestionAndFactsResponse(**response)
 
+
 @app.get("/get_question_and_facts/")
 def get_question_and_facts(
-    payload: SubmitQuestionAndDocumentsResponse,
+    payload,
 ) -> GetQuestionAndFactsResponse:
     with open("data.json", "r") as in_file:
         payload = json.load(in_file)
@@ -86,7 +87,7 @@ def get_question_and_facts(
     response = {
         "question": payload["question"],
         "facts": facts.split("\n"),
-        "status": "success",
+        "status": "done",
     }
     return GetQuestionAndFactsResponse(**response)
 
