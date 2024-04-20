@@ -1,15 +1,16 @@
 from fastapi import APIRouter, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from ask_gpt4 import send_message
 from responses import GetQuestionAndFactsResponse, SubmitQuestionAndDocumentsResponse
 
 app = FastAPI()
-from fastapi.middleware.cors import CORSMiddleware
 
 origins = [
     "http://localhost",
     "http://localhost:8080",
-    "https://huggingface.co/spaces/deven367/frontend"
+    "https://huggingface.co/spaces/deven367/frontend",
+    "https://crc-assignment-validator-n65rz53nomn.streamlit.app",
 ]
 
 app.add_middleware(
@@ -32,7 +33,9 @@ def read_root():
 
 
 @app.post("/submit_question_and_documents/")
-def response(payload: SubmitQuestionAndDocumentsResponse) -> GetQuestionAndFactsResponse:
+def response(
+    payload: SubmitQuestionAndDocumentsResponse,
+) -> GetQuestionAndFactsResponse:
     payload = payload.model_dump()
     print(payload.keys())
     message_log = [
@@ -47,7 +50,6 @@ def response(payload: SubmitQuestionAndDocumentsResponse) -> GetQuestionAndFacts
 
     facts = send_message(message_log)
     # print(type(facts))
-
 
     response = {
         "question": payload["question"],
