@@ -38,7 +38,10 @@ app.add_middleware(
 def read_root():
     return {"Hello": "World"}
 
+
 def process_payload(payload):
+    # print(dir(payload))
+    print(payload)
     all_logs = payload["documents"]
     text = ""
     for log in all_logs:
@@ -49,8 +52,11 @@ def process_payload(payload):
 
 
 @app.post("/submit_question_and_documents/")
-def response(payload):
-    # payload = payload.model_dump()
+def response(payload: SubmitQuestionAndDocumentsResponse):
+    # payload = json.loads(payload)
+    # print(payload)
+    payload = payload.model_dump()
+    print(payload)
     payload = process_payload(payload)
     with open("data.json", "w") as out_file:
         json.dump(payload, out_file)
