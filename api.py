@@ -58,5 +58,31 @@ def response(
     }
     return GetQuestionAndFactsResponse(**response)
 
+@app.get("/get_question_and_facts/")
+def get_question_and_facts(
+    payload: SubmitQuestionAndDocumentsResponse,
+) -> GetQuestionAndFactsResponse:
+    payload = payload.model_dump()
+    print(payload.keys())
+    message_log = [
+        {
+            "role": "system",
+            "content": "You are a helpful assistant.",
+        }
+    ]
+
+    user_input = payload["question"] + payload["text"]
+    message_log.append({"role": "user", "content": user_input})
+
+    facts = send_message(message_log)
+    # print(type(facts))
+
+    response = {
+        "question": payload["question"],
+        "facts": facts.split("\n"),
+        "status": "success",
+    }
+    return GetQuestionAndFactsResponse(**response)
+
 
 # app.include_router(router)
