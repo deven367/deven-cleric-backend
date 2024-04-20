@@ -1,6 +1,7 @@
 import json
 
 import nltk
+import requests
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from nltk import sent_tokenize
@@ -37,35 +38,24 @@ app.add_middleware(
 def read_root():
     return {"Hello": "World"}
 
+def process_payload(payload):
+    all_logs = payload["documents"]
+    text = ""
+    for log in all_logs:
+        text += requests.get(log).text
+
+    payload["text"] = text
+    return payload
+
 
 @app.post("/submit_question_and_documents/")
 def response(payload):
     # payload = payload.model_dump()
-    print(payload)
+    payload = process_payload(payload)
     with open("data.json", "w") as out_file:
         json.dump(payload, out_file)
     print(payload.keys())
-    # return {"status": "done"}
     return payload
-    # message_log = [
-    #     {
-    #         "role": "system",
-    #         "content": "You are a helpful assistant.",
-    #     }
-    # ]
-
-    # user_input = payload["question"] + payload["text"]
-    # message_log.append({"role": "user", "content": user_input})
-
-    # facts = send_message(message_log)
-    # # print(type(facts))
-
-    # response = {
-    #     "question": payload["question"],
-    #     "facts": facts.split("\n"),
-    #     "status": "success",
-    # }
-    # return GetQuestionAndFactsResponse(**response)
 
 
 @app.get("/get_question_and_facts/")
@@ -93,6 +83,3 @@ def get_question_and_facts() -> GetQuestionAndFactsResponse:
         "status": "done",
     }
     return GetQuestionAndFactsResponse(**response)
-
-
-# app.include_router(router)
