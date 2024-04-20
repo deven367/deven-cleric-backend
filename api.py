@@ -1,3 +1,5 @@
+import json
+
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -37,6 +39,8 @@ def response(
     payload: SubmitQuestionAndDocumentsResponse,
 ) -> GetQuestionAndFactsResponse:
     payload = payload.model_dump()
+    with open("data.json", "w") as out_file:
+        json.dump(payload, out_file)
     print(payload.keys())
     message_log = [
         {
@@ -62,6 +66,8 @@ def response(
 def get_question_and_facts(
     payload: SubmitQuestionAndDocumentsResponse,
 ) -> GetQuestionAndFactsResponse:
+    with open("data.json", "r") as in_file:
+        payload = json.load(in_file)
     payload = payload.model_dump()
     print(payload.keys())
     message_log = [
