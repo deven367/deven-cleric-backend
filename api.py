@@ -45,7 +45,7 @@ def process_payload(payload):
     all_logs = payload["documents"]
     text = ""
     for log in all_logs:
-        text += requests.get(log).text
+        text += f"{requests.get(log).text}\n"
 
     payload["text"] = text
     return payload
