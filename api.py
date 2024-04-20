@@ -2,6 +2,7 @@ import json
 
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from nltk import sent_tokenize
 
 from ask_gpt4 import send_message
 from responses import GetQuestionAndFactsResponse, SubmitQuestionAndDocumentsResponse
@@ -37,39 +38,38 @@ def read_root():
 @app.post("/submit_question_and_documents/")
 def response(
     payload: SubmitQuestionAndDocumentsResponse,
-) -> GetQuestionAndFactsResponse:
+) -> dict:
     payload = payload.model_dump()
     with open("data.json", "w") as out_file:
         json.dump(payload, out_file)
     print(payload.keys())
-    message_log = [
-        {
-            "role": "system",
-            "content": "You are a helpful assistant.",
-        }
-    ]
+    return {"status": "done"}
+    # message_log = [
+    #     {
+    #         "role": "system",
+    #         "content": "You are a helpful assistant.",
+    #     }
+    # ]
 
-    user_input = payload["question"] + payload["text"]
-    message_log.append({"role": "user", "content": user_input})
+    # user_input = payload["question"] + payload["text"]
+    # message_log.append({"role": "user", "content": user_input})
 
-    facts = send_message(message_log)
-    # print(type(facts))
+    # facts = send_message(message_log)
+    # # print(type(facts))
 
-    response = {
-        "question": payload["question"],
-        "facts": facts.split("\n"),
-        "status": "success",
-    }
-    return GetQuestionAndFactsResponse(**response)
+    # response = {
+    #     "question": payload["question"],
+    #     "facts": facts.split("\n"),
+    #     "status": "success",
+    # }
+    # return GetQuestionAndFactsResponse(**response)
 
 
 @app.get("/get_question_and_facts/")
-def get_question_and_facts(
-    payload,
-) -> GetQuestionAndFactsResponse:
+def get_question_and_facts() -> GetQuestionAndFactsResponse:
     with open("data.json", "r") as in_file:
         payload = json.load(in_file)
-    payload = payload.model_dump()
+
     print(payload.keys())
     message_log = [
         {
@@ -86,7 +86,7 @@ def get_question_and_facts(
 
     response = {
         "question": payload["question"],
-        "facts": facts.split("\n"),
+        "facts": sent_tokenize(facts),
         "status": "done",
     }
     return GetQuestionAndFactsResponse(**response)
