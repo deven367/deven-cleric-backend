@@ -39,14 +39,14 @@ def read_root():
 
 
 @app.post("/submit_question_and_documents/")
-def response(
-    payload: SubmitQuestionAndDocumentsResponse,
-) -> dict:
-    payload = payload.model_dump()
+def response(payload):
+    # payload = payload.model_dump()
+    print(payload)
     with open("data.json", "w") as out_file:
         json.dump(payload, out_file)
     print(payload.keys())
-    return {"status": "done"}
+    # return {"status": "done"}
+    return payload
     # message_log = [
     #     {
     #         "role": "system",
