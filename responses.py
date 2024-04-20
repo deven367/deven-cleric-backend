@@ -11,4 +11,5 @@ class GetQuestionAndFactsResponse(BaseModel):
 
 
 class SubmitQuestionAndDocumentsResponse(BaseModel):
-    pass
+    question: str
+    documents: List[str]
