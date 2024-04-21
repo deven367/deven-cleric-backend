@@ -4,7 +4,6 @@ import nltk
 import requests
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from nltk import sent_tokenize
 
 from ask_gpt4 import send_message
 from responses import GetQuestionAndFactsResponse, SubmitQuestionAndDocumentsResponse
