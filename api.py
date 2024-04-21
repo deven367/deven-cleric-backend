@@ -38,7 +38,11 @@ def process_payload(payload):
     all_logs = payload["documents"]
     text = ""
     for log in all_logs:
-        text += f"{requests.get(log).text}\n"
+        try:
+            text += f"{requests.get(log).text}\n"
+        except Exception as e:
+            print(e)
+            print(f"Failed to fetch {log}")
 
     payload["text"] = text
     return payload
@@ -70,15 +74,28 @@ def get_question_and_facts() -> GetQuestionAndFactsResponse:
         }
     ]
 
+    # making sure the get request is not empty
+    if len(payload["text"]) == 0:
+        response = {
+            "question": payload["question"],
+            "facts": None,
+            "status": "failed",
+        }
+        return GetQuestionAndFactsResponse(**response)
+
+    # creating the user input
     user_input = payload["question"] + payload["text"]
+
+    # adding the user input to the message log
     message_log.append({"role": "user", "content": user_input})
 
+    # sending the message log to the model
     facts = send_message(message_log)
     # print(type(facts))
 
     response = {
         "question": payload["question"],
-        "facts": facts.split("\n") if facts else None,
+        "facts": facts.split("\n"), # this is a list of facts split by new line
         "status": "done",
     }
     return GetQuestionAndFactsResponse(**response)
