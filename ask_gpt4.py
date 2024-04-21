@@ -7,7 +7,7 @@ def send_message(message_log):
     # Use OpenAI's ChatCompletion API to get the chatbot's response
     client = OpenAI()
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo-0125",  # The name of the OpenAI chatbot model to use
+        model="gpt-4-turbo",  # The name of the OpenAI chatbot model to use
         messages=message_log,  # The conversation history up to this point, as a list of dictionaries
         max_tokens=3800,  # The maximum number of tokens (words or subwords) in the generated response
         stop=None,  # The stopping sequence for the generated response, if any (not used here)
