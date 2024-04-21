@@ -1,6 +1,5 @@
 import json
 
-import nltk
 import requests
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,7 +7,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from ask_gpt4 import send_message
 from responses import GetQuestionAndFactsResponse, SubmitQuestionAndDocumentsResponse
 
-nltk.download("punkt")
 app = FastAPI()
 
 origins = [
