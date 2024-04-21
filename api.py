@@ -2,7 +2,7 @@ import json
 
 import nltk
 import requests
-from fastapi import APIRouter, FastAPI
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from nltk import sent_tokenize
 
@@ -27,12 +27,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-# @router.post("/submit_question_and_documents/")
-# def response(payload: SubmitQuestionAndDocumentsResponse):
-#     print(payload)
-
 
 @app.get("/")
 def read_root():
@@ -85,7 +79,7 @@ def get_question_and_facts() -> GetQuestionAndFactsResponse:
 
     response = {
         "question": payload["question"],
-        "facts": sent_tokenize(facts),
+        "facts": facts.split("\n") if facts else None,
         "status": "done",
     }
     return GetQuestionAndFactsResponse(**response)

@@ -1,16 +1,6 @@
-import os
-
 from openai import OpenAI
 
 # os.environ["OPENAI_API_KEY"] = open("/Users/deven367/openai-key.txt").read().strip()
-
-class AskGPT4:
-
-    def __init__(self, question, logs):
-        self.question = question
-        self.logs = logs
-        self.text = self.process_payload()
-
 
 
 def send_message(message_log):
